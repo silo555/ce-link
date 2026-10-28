@@ -15,6 +15,10 @@ test('rejects corrupt checksums, truncation, unsupported signatures and Flash fi
   assert.throws(() => parseFile(fixture().subarray(0, 62)), /length/);
   assert.throws(() => parseFile(Buffer.from('**TIFL**')), /supported/);
 });
+test('accepts the CE creator/model byte used by real CE program files', () => {
+  const file = fixture([{ name: 'CEDEMO', type: 6 }]); file[10] = 0x13;
+  assert.equal(parseFile(file).entries[0].name, 'CEDEMO');
+});
 test('rejects malformed headers, repeated sizes and unsupported types even with a valid checksum', () => {
   const header = fixture(); header[55] = 12;
   assert.throws(() => parseFile(fixChecksum(header)), /header/);

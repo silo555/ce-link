@@ -4,8 +4,9 @@ function parseFile(input) {
   const word = i => bytes[i] | bytes[i + 1] << 8;
   const fail = message => { throw new Error(message); };
   if (bytes.length < 57 || String.fromCharCode(...bytes.slice(0, 8)) !== '**TI83F*' ||
-      bytes[8] !== 0x1a || bytes[9] !== 0x0a || bytes[10] !== 0)
+      bytes[8] !== 0x1a || bytes[9] !== 0x0a)
     fail('Not a supported TI variable file. Choose .8xp, .8xv, or .8xg.');
+  // Byte 10 is creator/model metadata (for example 0x13 in CE files), not a fixed zero.
   const end = 55 + word(53);
   if (end + 2 !== bytes.length) fail('File length does not match its header.');
   const checksum = bytes.slice(55, end).reduce((sum, n) => (sum + n) & 65535, 0);
