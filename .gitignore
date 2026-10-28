@@ -1,0 +1,17 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+*.pem
+*.key
+*.log
+AGENTS.md
+SKILL.md
+skills.md
+**/SKILL.md
+**/skills.md
+.codex/
+.claude/
+outputs/
+test-results/
+playwright-report/

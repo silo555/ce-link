@@ -1,0 +1,1503 @@
+<!doctype html>
+<!--
+# Third-party notices
+
+CE Link is licensed under GPL-3.0-or-later. Copyright (C) 2026 CE Link contributors.
+It is distributed without warranty; see LICENSE.
+
+This project includes code from **ticalc-usb** by Timendus and its contributors:
+https://github.com/Timendus/ticalc-usb
+
+- Source revision: `862541183cd2004813c432dea7a4f7b9501fe9c2`
+- License: GPL-3.0-or-later (full text in LICENSE and embedded in index.html)
+- Included source: `vendor/ticalc-usb/byte-mangling.js` and
+  `vendor/ticalc-usb/dusb/{device,magic-values,ti84series,ez80series}.js`
+- Changes made 2026-10-28: handle devices without an active USB configuration;
+  find bulk endpoints and select the corresponding alternate interface; reject
+  invalid negotiated buffer sizes and incomplete/failed writes; respect DataView
+  byte offsets and lengths. The other included files are unchanged.
+- The library describes its DUSB protocol implementation as inspired by TiLP's
+  tilibs: https://github.com/debrouxl/tilibs
+
+All corresponding application and bundled library source is provided in this
+repository. `node tools/build.js` reconstructs the standalone HTML without
+third-party build tools. No calculator ROMs, firmware, private calculator data,
+or Texas Instruments proprietary software are included.
+
+GNU GENERAL PUBLIC LICENSE
+   Version 3, 29 June 2007
+
+Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+
+        Preamble
+
+The GNU General Public License is a free, copyleft license for
+software and other kinds of works.
+
+The licenses for most software and other practical works are designed
+to take away your freedom to share and change the works.  By contrast,
+the GNU General Public License is intended to guarantee your freedom to
+share and change all versions of a program--to make sure it remains free
+software for all its users.  We, the Free Software Foundation, use the
+GNU General Public License for most of our software; it applies also to
+any other work released this way by its authors.  You can apply it to
+your programs, too.
+
+When we speak of free software, we are referring to freedom, not
+price.  Our General Public Licenses are designed to make sure that you
+have the freedom to distribute copies of free software (and charge for
+them if you wish), that you receive source code or can get it if you
+want it, that you can change the software or use pieces of it in new
+free programs, and that you know you can do these things.
+
+To protect your rights, we need to prevent others from denying you
+these rights or asking you to surrender the rights.  Therefore, you have
+certain responsibilities if you distribute copies of the software, or if
+you modify it: responsibilities to respect the freedom of others.
+
+For example, if you distribute copies of such a program, whether
+gratis or for a fee, you must pass on to the recipients the same
+freedoms that you received.  You must make sure that they, too, receive
+or can get the source code.  And you must show them these terms so they
+know their rights.
+
+Developers that use the GNU GPL protect your rights with two steps:
+(1) assert copyright on the software, and (2) offer you this License
+giving you legal permission to copy, distribute and/or modify it.
+
+For the developers' and authors' protection, the GPL clearly explains
+that there is no warranty for this free software.  For both users' and
+authors' sake, the GPL requires that modified versions be marked as
+changed, so that their problems will not be attributed erroneously to
+authors of previous versions.
+
+Some devices are designed to deny users access to install or run
+modified versions of the software inside them, although the manufacturer
+can do so.  This is fundamentally incompatible with the aim of
+protecting users' freedom to change the software.  The systematic
+pattern of such abuse occurs in the area of products for individuals to
+use, which is precisely where it is most unacceptable.  Therefore, we
+have designed this version of the GPL to prohibit the practice for those
+products.  If such problems arise substantially in other domains, we
+stand ready to extend this provision to those domains in future versions
+of the GPL, as needed to protect the freedom of users.
+
+Finally, every program is threatened constantly by software patents.
+States should not allow patents to restrict development and use of
+software on general-purpose computers, but in those that do, we wish to
+avoid the special danger that patents applied to a free program could
+make it effectively proprietary.  To prevent this, the GPL assures that
+patents cannot be used to render the program non-free.
+
+The precise terms and conditions for copying, distribution and
+modification follow.
+
+   TERMS AND CONDITIONS
+
+0. Definitions.
+
+"This License" refers to version 3 of the GNU General Public License.
+
+"Copyright" also means copyright-like laws that apply to other kinds of
+works, such as semiconductor masks.
+
+"The Program" refers to any copyrightable work licensed under this
+License.  Each licensee is addressed as "you".  "Licensees" and
+"recipients" may be individuals or organizations.
+
+To "modify" a work means to copy from or adapt all or part of the work
+in a fashion requiring copyright permission, other than the making of an
+exact copy.  The resulting work is called a "modified version" of the
+earlier work or a work "based on" the earlier work.
+
+A "covered work" means either the unmodified Program or a work based
+on the Program.
+
+To "propagate" a work means to do anything with it that, without
+permission, would make you directly or secondarily liable for
+infringement under applicable copyright law, except executing it on a
+computer or modifying a private copy.  Propagation includes copying,
+distribution (with or without modification), making available to the
+public, and in some countries other activities as well.
+
+To "convey" a work means any kind of propagation that enables other
+parties to make or receive copies.  Mere interaction with a user through
+a computer network, with no transfer of a copy, is not conveying.
+
+An interactive user interface displays "Appropriate Legal Notices"
+to the extent that it includes a convenient and prominently visible
+feature that (1) displays an appropriate copyright notice, and (2)
+tells the user that there is no warranty for the work (except to the
+extent that warranties are provided), that licensees may convey the
+work under this License, and how to view a copy of this License.  If
+the interface presents a list of user commands or options, such as a
+menu, a prominent item in the list meets this criterion.
+
+1. Source Code.
+
+The "source code" for a work means the preferred form of the work
+for making modifications to it.  "Object code" means any non-source
+form of a work.
+
+A "Standard Interface" means an interface that either is an official
+standard defined by a recognized standards body, or, in the case of
+interfaces specified for a particular programming language, one that
+is widely used among developers working in that language.
+
+The "System Libraries" of an executable work include anything, other
+than the work as a whole, that (a) is included in the normal form of
+packaging a Major Component, but which is not part of that Major
+Component, and (b) serves only to enable use of the work with that
+Major Component, or to implement a Standard Interface for which an
+implementation is available to the public in source code form.  A
+"Major Component", in this context, means a major essential component
+(kernel, window system, and so on) of the specific operating system
+(if any) on which the executable work runs, or a compiler used to
+produce the work, or an object code interpreter used to run it.
+
+The "Corresponding Source" for a work in object code form means all
+the source code needed to generate, install, and (for an executable
+work) run the object code and to modify the work, including scripts to
+control those activities.  However, it does not include the work's
+System Libraries, or general-purpose tools or generally available free
+programs which are used unmodified in performing those activities but
+which are not part of the work.  For example, Corresponding Source
+includes interface definition files associated with source files for
+the work, and the source code for shared libraries and dynamically
+linked subprograms that the work is specifically designed to require,
+such as by intimate data communication or control flow between those
+subprograms and other parts of the work.
+
+The Corresponding Source need not include anything that users
+can regenerate automatically from other parts of the Corresponding
+Source.
+
+The Corresponding Source for a work in source code form is that
+same work.
+
+2. Basic Permissions.
+
+All rights granted under this License are granted for the term of
+copyright on the Program, and are irrevocable provided the stated
+conditions are met.  This License explicitly affirms your unlimited
+permission to run the unmodified Program.  The output from running a
+covered work is covered by this License only if the output, given its
+content, constitutes a covered work.  This License acknowledges your
+rights of fair use or other equivalent, as provided by copyright law.
+
+You may make, run and propagate covered works that you do not
+convey, without conditions so long as your license otherwise remains
+in force.  You may convey covered works to others for the sole purpose
+of having them make modifications exclusively for you, or provide you
+with facilities for running those works, provided that you comply with
+the terms of this License in conveying all material for which you do
+not control copyright.  Those thus making or running the covered works
+for you must do so exclusively on your behalf, under your direction
+and control, on terms that prohibit them from making any copies of
+your copyrighted material outside their relationship with you.
+
+Conveying under any other circumstances is permitted solely under
+the conditions stated below.  Sublicensing is not allowed; section 10
+makes it unnecessary.
+
+3. Protecting Users' Legal Rights From Anti-Circumvention Law.
+
+No covered work shall be deemed part of an effective technological
+measure under any applicable law fulfilling obligations under article
+11 of the WIPO copyright treaty adopted on 20 December 1996, or
+similar laws prohibiting or restricting circumvention of such
+measures.
+
+When you convey a covered work, you waive any legal power to forbid
+circumvention of technological measures to the extent such circumvention
+is effected by exercising rights under this License with respect to
+the covered work, and you disclaim any intention to limit operation or
+modification of the work as a means of enforcing, against the work's
+users, your or third parties' legal rights to forbid circumvention of
+technological measures.
+
+4. Conveying Verbatim Copies.
+
+You may convey verbatim copies of the Program's source code as you
+receive it, in any medium, provided that you conspicuously and
+appropriately publish on each copy an appropriate copyright notice;
+keep intact all notices stating that this License and any
+non-permissive terms added in accord with section 7 apply to the code;
+keep intact all notices of the absence of any warranty; and give all
+recipients a copy of this License along with the Program.
+
+You may charge any price or no price for each copy that you convey,
+and you may offer support or warranty protection for a fee.
+
+5. Conveying Modified Source Versions.
+
+You may convey a work based on the Program, or the modifications to
+produce it from the Program, in the form of source code under the
+terms of section 4, provided that you also meet all of these conditions:
+
+a) The work must carry prominent notices stating that you modified
+it, and giving a relevant date.
+
+b) The work must carry prominent notices stating that it is
+released under this License and any conditions added under section
+7.  This requirement modifies the requirement in section 4 to
+"keep intact all notices".
+
+c) You must license the entire work, as a whole, under this
+License to anyone who comes into possession of a copy.  This
+License will therefore apply, along with any applicable section 7
+additional terms, to the whole of the work, and all its parts,
+regardless of how they are packaged.  This License gives no
+permission to license the work in any other way, but it does not
+invalidate such permission if you have separately received it.
+
+d) If the work has interactive user interfaces, each must display
+Appropriate Legal Notices; however, if the Program has interactive
+interfaces that do not display Appropriate Legal Notices, your
+work need not make them do so.
+
+A compilation of a covered work with other separate and independent
+works, which are not by their nature extensions of the covered work,
+and which are not combined with it such as to form a larger program,
+in or on a volume of a storage or distribution medium, is called an
+"aggregate" if the compilation and its resulting copyright are not
+used to limit the access or legal rights of the compilation's users
+beyond what the individual works permit.  Inclusion of a covered work
+in an aggregate does not cause this License to apply to the other
+parts of the aggregate.
+
+6. Conveying Non-Source Forms.
+
+You may convey a covered work in object code form under the terms
+of sections 4 and 5, provided that you also convey the
+machine-readable Corresponding Source under the terms of this License,
+in one of these ways:
+
+a) Convey the object code in, or embodied in, a physical product
+(including a physical distribution medium), accompanied by the
+Corresponding Source fixed on a durable physical medium
+customarily used for software interchange.
+
+b) Convey the object code in, or embodied in, a physical product
+(including a physical distribution medium), accompanied by a
+written offer, valid for at least three years and valid for as
+long as you offer spare parts or customer support for that product
+model, to give anyone who possesses the object code either (1) a
+copy of the Corresponding Source for all the software in the
+product that is covered by this License, on a durable physical
+medium customarily used for software interchange, for a price no
+more than your reasonable cost of physically performing this
+conveying of source, or (2) access to copy the
+Corresponding Source from a network server at no charge.
+
+c) Convey individual copies of the object code with a copy of the
+written offer to provide the Corresponding Source.  This
+alternative is allowed only occasionally and noncommercially, and
+only if you received the object code with such an offer, in accord
+with subsection 6b.
+
+d) Convey the object code by offering access from a designated
+place (gratis or for a charge), and offer equivalent access to the
+Corresponding Source in the same way through the same place at no
+further charge.  You need not require recipients to copy the
+Corresponding Source along with the object code.  If the place to
+copy the object code is a network server, the Corresponding Source
+may be on a different server (operated by you or a third party)
+that supports equivalent copying facilities, provided you maintain
+clear directions next to the object code saying where to find the
+Corresponding Source.  Regardless of what server hosts the
+Corresponding Source, you remain obligated to ensure that it is
+available for as long as needed to satisfy these requirements.
+
+e) Convey the object code using peer-to-peer transmission, provided
+you inform other peers where the object code and Corresponding
+Source of the work are being offered to the general public at no
+charge under subsection 6d.
+
+A separable portion of the object code, whose source code is excluded
+from the Corresponding Source as a System Library, need not be
+included in conveying the object code work.
+
+A "User Product" is either (1) a "consumer product", which means any
+tangible personal property which is normally used for personal, family,
+or household purposes, or (2) anything designed or sold for incorporation
+into a dwelling.  In determining whether a product is a consumer product,
+doubtful cases shall be resolved in favor of coverage.  For a particular
+product received by a particular user, "normally used" refers to a
+typical or common use of that class of product, regardless of the status
+of the particular user or of the way in which the particular user
+actually uses, or expects or is expected to use, the product.  A product
+is a consumer product regardless of whether the product has substantial
+commercial, industrial or non-consumer uses, unless such uses represent
+the only significant mode of use of the product.
+
+"Installation Information" for a User Product means any methods,
+procedures, authorization keys, or other information required to install
+and execute modified versions of a covered work in that User Product from
+a modified version of its Corresponding Source.  The information must
+suffice to ensure that the continued functioning of the modified object
+code is in no case prevented or interfered with solely because
+modification has been made.
+
+If you convey an object code work under this section in, or with, or
+specifically for use in, a User Product, and the conveying occurs as
+part of a transaction in which the right of possession and use of the
+User Product is transferred to the recipient in perpetuity or for a
+fixed term (regardless of how the transaction is characterized), the
+Corresponding Source conveyed under this section must be accompanied
+by the Installation Information.  But this requirement does not apply
+if neither you nor any third party retains the ability to install
+modified object code on the User Product (for example, the work has
+been installed in ROM).
+
+The requirement to provide Installation Information does not include a
+requirement to continue to provide support service, warranty, or updates
+for a work that has been modified or installed by the recipient, or for
+the User Product in which it has been modified or installed.  Access to a
+network may be denied when the modification itself materially and
+adversely affects the operation of the network or violates the rules and
+protocols for communication across the network.
+
+Corresponding Source conveyed, and Installation Information provided,
+in accord with this section must be in a format that is publicly
+documented (and with an implementation available to the public in
+source code form), and must require no special password or key for
+unpacking, reading or copying.
+
+7. Additional Terms.
+
+"Additional permissions" are terms that supplement the terms of this
+License by making exceptions from one or more of its conditions.
+Additional permissions that are applicable to the entire Program shall
+be treated as though they were included in this License, to the extent
+that they are valid under applicable law.  If additional permissions
+apply only to part of the Program, that part may be used separately
+under those permissions, but the entire Program remains governed by
+this License without regard to the additional permissions.
+
+When you convey a copy of a covered work, you may at your option
+remove any additional permissions from that copy, or from any part of
+it.  (Additional permissions may be written to require their own
+removal in certain cases when you modify the work.)  You may place
+additional permissions on material, added by you to a covered work,
+for which you have or can give appropriate copyright permission.
+
+Notwithstanding any other provision of this License, for material you
+add to a covered work, you may (if authorized by the copyright holders of
+that material) supplement the terms of this License with terms:
+
+a) Disclaiming warranty or limiting liability differently from the
+terms of sections 15 and 16 of this License; or
+
+b) Requiring preservation of specified reasonable legal notices or
+author attributions in that material or in the Appropriate Legal
+Notices displayed by works containing it; or
+
+c) Prohibiting misrepresentation of the origin of that material, or
+requiring that modified versions of such material be marked in
+reasonable ways as different from the original version; or
+
+d) Limiting the use for publicity purposes of names of licensors or
+authors of the material; or
+
+e) Declining to grant rights under trademark law for use of some
+trade names, trademarks, or service marks; or
+
+f) Requiring indemnification of licensors and authors of that
+material by anyone who conveys the material (or modified versions of
+it) with contractual assumptions of liability to the recipient, for
+any liability that these contractual assumptions directly impose on
+those licensors and authors.
+
+All other non-permissive additional terms are considered "further
+restrictions" within the meaning of section 10.  If the Program as you
+received it, or any part of it, contains a notice stating that it is
+governed by this License along with a term that is a further
+restriction, you may remove that term.  If a license document contains
+a further restriction but permits relicensing or conveying under this
+License, you may add to a covered work material governed by the terms
+of that license document, provided that the further restriction does
+not survive such relicensing or conveying.
+
+If you add terms to a covered work in accord with this section, you
+must place, in the relevant source files, a statement of the
+additional terms that apply to those files, or a notice indicating
+where to find the applicable terms.
+
+Additional terms, permissive or non-permissive, may be stated in the
+form of a separately written license, or stated as exceptions;
+the above requirements apply either way.
+
+8. Termination.
+
+You may not propagate or modify a covered work except as expressly
+provided under this License.  Any attempt otherwise to propagate or
+modify it is void, and will automatically terminate your rights under
+this License (including any patent licenses granted under the third
+paragraph of section 11).
+
+However, if you cease all violation of this License, then your
+license from a particular copyright holder is reinstated (a)
+provisionally, unless and until the copyright holder explicitly and
+finally terminates your license, and (b) permanently, if the copyright
+holder fails to notify you of the violation by some reasonable means
+prior to 60 days after the cessation.
+
+Moreover, your license from a particular copyright holder is
+reinstated permanently if the copyright holder notifies you of the
+violation by some reasonable means, this is the first time you have
+received notice of violation of this License (for any work) from that
+copyright holder, and you cure the violation prior to 30 days after
+your receipt of the notice.
+
+Termination of your rights under this section does not terminate the
+licenses of parties who have received copies or rights from you under
+this License.  If your rights have been terminated and not permanently
+reinstated, you do not qualify to receive new licenses for the same
+material under section 10.
+
+9. Acceptance Not Required for Having Copies.
+
+You are not required to accept this License in order to receive or
+run a copy of the Program.  Ancillary propagation of a covered work
+occurring solely as a consequence of using peer-to-peer transmission
+to receive a copy likewise does not require acceptance.  However,
+nothing other than this License grants you permission to propagate or
+modify any covered work.  These actions infringe copyright if you do
+not accept this License.  Therefore, by modifying or propagating a
+covered work, you indicate your acceptance of this License to do so.
+
+10. Automatic Licensing of Downstream Recipients.
+
+Each time you convey a covered work, the recipient automatically
+receives a license from the original licensors, to run, modify and
+propagate that work, subject to this License.  You are not responsible
+for enforcing compliance by third parties with this License.
+
+An "entity transaction" is a transaction transferring control of an
+organization, or substantially all assets of one, or subdividing an
+organization, or merging organizations.  If propagation of a covered
+work results from an entity transaction, each party to that
+transaction who receives a copy of the work also receives whatever
+licenses to the work the party's predecessor in interest had or could
+give under the previous paragraph, plus a right to possession of the
+Corresponding Source of the work from the predecessor in interest, if
+the predecessor has it or can get it with reasonable efforts.
+
+You may not impose any further restrictions on the exercise of the
+rights granted or affirmed under this License.  For example, you may
+not impose a license fee, royalty, or other charge for exercise of
+rights granted under this License, and you may not initiate litigation
+(including a cross-claim or counterclaim in a lawsuit) alleging that
+any patent claim is infringed by making, using, selling, offering for
+sale, or importing the Program or any portion of it.
+
+11. Patents.
+
+A "contributor" is a copyright holder who authorizes use under this
+License of the Program or a work on which the Program is based.  The
+work thus licensed is called the contributor's "contributor version".
+
+A contributor's "essential patent claims" are all patent claims
+owned or controlled by the contributor, whether already acquired or
+hereafter acquired, that would be infringed by some manner, permitted
+by this License, of making, using, or selling its contributor version,
+but do not include claims that would be infringed only as a
+consequence of further modification of the contributor version.  For
+purposes of this definition, "control" includes the right to grant
+patent sublicenses in a manner consistent with the requirements of
+this License.
+
+Each contributor grants you a non-exclusive, worldwide, royalty-free
+patent license under the contributor's essential patent claims, to
+make, use, sell, offer for sale, import and otherwise run, modify and
+propagate the contents of its contributor version.
+
+In the following three paragraphs, a "patent license" is any express
+agreement or commitment, however denominated, not to enforce a patent
+(such as an express permission to practice a patent or covenant not to
+sue for patent infringement).  To "grant" such a patent license to a
+party means to make such an agreement or commitment not to enforce a
+patent against the party.
+
+If you convey a covered work, knowingly relying on a patent license,
+and the Corresponding Source of the work is not available for anyone
+to copy, free of charge and under the terms of this License, through a
+publicly available network server or other readily accessible means,
+then you must either (1) cause the Corresponding Source to be so
+available, or (2) arrange to deprive yourself of the benefit of the
+patent license for this particular work, or (3) arrange, in a manner
+consistent with the requirements of this License, to extend the patent
+license to downstream recipients.  "Knowingly relying" means you have
+actual knowledge that, but for the patent license, your conveying the
+covered work in a country, or your recipient's use of the covered work
+in a country, would infringe one or more identifiable patents in that
+country that you have reason to believe are valid.
+
+If, pursuant to or in connection with a single transaction or
+arrangement, you convey, or propagate by procuring conveyance of, a
+covered work, and grant a patent license to some of the parties
+receiving the covered work authorizing them to use, propagate, modify
+or convey a specific copy of the covered work, then the patent license
+you grant is automatically extended to all recipients of the covered
+work and works based on it.
+
+A patent license is "discriminatory" if it does not include within
+the scope of its coverage, prohibits the exercise of, or is
+conditioned on the non-exercise of one or more of the rights that are
+specifically granted under this License.  You may not convey a covered
+work if you are a party to an arrangement with a third party that is
+in the business of distributing software, under which you make payment
+to the third party based on the extent of your activity of conveying
+the work, and under which the third party grants, to any of the
+parties who would receive the covered work from you, a discriminatory
+patent license (a) in connection with copies of the covered work
+conveyed by you (or copies made from those copies), or (b) primarily
+for and in connection with specific products or compilations that
+contain the covered work, unless you entered into that arrangement,
+or that patent license was granted, prior to 28 March 2007.
+
+Nothing in this License shall be construed as excluding or limiting
+any implied license or other defenses to infringement that may
+otherwise be available to you under applicable patent law.
+
+12. No Surrender of Others' Freedom.
+
+If conditions are imposed on you (whether by court order, agreement or
+otherwise) that contradict the conditions of this License, they do not
+excuse you from the conditions of this License.  If you cannot convey a
+covered work so as to satisfy simultaneously your obligations under this
+License and any other pertinent obligations, then as a consequence you may
+not convey it at all.  For example, if you agree to terms that obligate you
+to collect a royalty for further conveying from those to whom you convey
+the Program, the only way you could satisfy both those terms and this
+License would be to refrain entirely from conveying the Program.
+
+13. Use with the GNU Affero General Public License.
+
+Notwithstanding any other provision of this License, you have
+permission to link or combine any covered work with a work licensed
+under version 3 of the GNU Affero General Public License into a single
+combined work, and to convey the resulting work.  The terms of this
+License will continue to apply to the part which is the covered work,
+but the special requirements of the GNU Affero General Public License,
+section 13, concerning interaction through a network will apply to the
+combination as such.
+
+14. Revised Versions of this License.
+
+The Free Software Foundation may publish revised and/or new versions of
+the GNU General Public License from time to time.  Such new versions will
+be similar in spirit to the present version, but may differ in detail to
+address new problems or concerns.
+
+Each version is given a distinguishing version number.  If the
+Program specifies that a certain numbered version of the GNU General
+Public License "or any later version" applies to it, you have the
+option of following the terms and conditions either of that numbered
+version or of any later version published by the Free Software
+Foundation.  If the Program does not specify a version number of the
+GNU General Public License, you may choose any version ever published
+by the Free Software Foundation.
+
+If the Program specifies that a proxy can decide which future
+versions of the GNU General Public License can be used, that proxy's
+public statement of acceptance of a version permanently authorizes you
+to choose that version for the Program.
+
+Later license versions may give you additional or different
+permissions.  However, no additional obligations are imposed on any
+author or copyright holder as a result of your choosing to follow a
+later version.
+
+15. Disclaimer of Warranty.
+
+THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
+APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
+OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
+IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
+ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+16. Limitation of Liability.
+
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
+THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
+GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
+USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
+DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
+PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
+EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
+17. Interpretation of Sections 15 and 16.
+
+If the disclaimer of warranty and limitation of liability provided
+above cannot be given local legal effect according to their terms,
+reviewing courts shall apply local law that most closely approximates
+an absolute waiver of all civil liability in connection with the
+Program, unless a warranty or assumption of liability accompanies a
+copy of the Program in return for a fee.
+
+ END OF TERMS AND CONDITIONS
+
+How to Apply These Terms to Your New Programs
+
+If you develop a new program, and you want it to be of the greatest
+possible use to the public, the best way to achieve this is to make it
+free software which everyone can redistribute and change under these terms.
+
+To do so, attach the following notices to the program.  It is safest
+to attach them to the start of each source file to most effectively
+state the exclusion of warranty; and each file should have at least
+the "copyright" line and a pointer to where the full notice is found.
+
+<one line to give the program's name and a brief idea of what it does.>
+Copyright (C) <year>  <name of author>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Also add information on how to contact you by electronic and paper mail.
+
+If the program does terminal interaction, make it output a short
+notice like this when it starts in an interactive mode:
+
+<program>  Copyright (C) <year>  <name of author>
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+This is free software, and you are welcome to redistribute it
+under certain conditions; type `show c' for details.
+
+The hypothetical commands `show w' and `show c' should show the appropriate
+parts of the General Public License.  Of course, your program's commands
+might be different; for a GUI interface, you would use an "about box".
+
+You should also get your employer (if you work as a programmer) or school,
+if any, to sign a "copyright disclaimer" for the program, if necessary.
+For more information on this, and how to apply and follow the GNU GPL, see
+<https://www.gnu.org/licenses/>.
+
+The GNU General Public License does not permit incorporating your program
+into proprietary programs.  If your program is a subroutine library, you
+may consider it more useful to permit linking proprietary applications with
+the library.  If this is what you want to do, use the GNU Lesser General
+Public License instead of this License.  But first, please read
+<https://www.gnu.org/licenses/why-not-lgpl.html>.
+
+-->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="description" content="Send programs and AppVars to your TI-84 Plus CE from a single offline HTML file.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>CE Link · Calculator file transfer</title>
+<style>
+:root{font:16px/1.55 system-ui,sans-serif;color:#193c36;background:#f1f5f0}*{box-sizing:border-box}body{margin:0}main{max-width:900px;margin:auto;padding:42px 24px 70px}header{display:flex;justify-content:space-between;gap:20px;align-items:center}.brand{font-weight:800;font-size:20px;letter-spacing:-.5px}.badge,.tag{font-size:12px;background:#e6eee8;padding:5px 10px;border-radius:20px;white-space:nowrap}.eyebrow{margin:44px 0 10px;text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:750;color:#4d7360}h1{font-size:clamp(36px,6vw,58px);line-height:1.07;letter-spacing:-2px;margin:0 0 20px;max-width:700px}p{margin:12px 0}.intro{color:#536a61;max-width:590px;font-size:18px}.layout{display:grid;grid-template-columns:1fr 1.55fr;gap:18px;margin:32px 0 18px}.card{background:#fff;border:1px solid #d9e3da;border-radius:20px;padding:25px}h2{font-size:18px;margin:0 0 12px;letter-spacing:-.3px}.number{display:inline-grid;place-items:center;background:#e9f0e7;border-radius:8px;width:28px;height:28px;font-size:13px;margin-right:7px}button,.filebutton{font:inherit;cursor:pointer;border-radius:10px;border:1px solid #b9cbbf;background:#fff;color:#193c36;padding:11px 17px;font-weight:650;display:inline-block}button.primary{background:#225c44;color:white;border-color:#225c44}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,.filebutton:focus-within{outline:3px solid #d5a34a;outline-offset:3px}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}.muted,small{font-size:13px;color:#62736b}#connection{margin:18px 0 5px;font-weight:650;font-size:14px}#drop{border:1px dashed #a8bfae;border-radius:14px;background:#f8faf6;padding:23px;text-align:center}input[type=file]{width:100%;font:inherit;font-size:13px;margin-top:12px}#list{list-style:none;padding:0;margin:18px 0 0}#list li{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #e6ece5}#list strong{font-size:14px;overflow-wrap:anywhere}#list small{display:block;overflow-wrap:anywhere}#list li>span:first-child{min-width:0}label{font-size:14px}select{font:inherit;font-size:14px;padding:9px;border:1px solid #b9cbbf;border-radius:8px;margin:8px 0 16px;width:100%;background:#fff;color:inherit}.consent{display:flex;gap:9px;align-items:flex-start}.consent input{margin-top:5px}progress{width:100%;height:9px;accent-color:#225c44;margin-top:18px}.notice{border-radius:12px;background:#e4eee0;padding:15px 18px;font-size:14px}.notice.error{background:#fff0dc;color:#75461b}details{margin-top:22px;font-size:14px}summary{cursor:pointer;font-weight:650}details li{margin:8px 0}footer{margin-top:32px;color:#62736b;font-size:12px}a{color:#225c44}#empty{margin:14px 0 0}@media(max-width:650px){main{padding:25px 16px}.layout{grid-template-columns:1fr}.card{padding:20px}.badge{white-space:normal}header{align-items:flex-start}h1{letter-spacing:-1px}}
+</style></head><body><main>
+<header><div class="brand">↗ CE Link</div><span class="badge">One HTML file. No installation.</span></header>
+<p class="eyebrow">TI-84 Plus CE · USB transfer</p><h1>A little less setup.<br>A lot more calculator.</h1>
+<p class="intro">Send programs and AppVars straight from your browser. Your files stay on this computer and your calculator.</p>
+<div class="layout"><section class="card"><h2><span class="number">1</span> Connect your CE</h2><p class="muted">Turn it on, return to the home screen, and plug in a USB data cable. Close TI Connect and other calculator tabs.</p><div id="connection" aria-live="polite">Not connected</div><div class="actions"><button id="connect" class="primary">Connect calculator</button><button id="disconnect" disabled>Disconnect</button></div><p class="muted">Desktop Chrome or Edge recommended. USB access depends on browser, operating system, and school policy.</p></section>
+<section class="card"><h2><span class="number">2</span> Choose your files</h2><div id="drop"><strong>Drop calculator files here</strong><div class="muted">.8xp programs · .8xv AppVars · .8xg groups</div><label for="files" class="muted">Or browse your computer</label><input id="files" type="file" multiple accept=".8xp,.8xv,.8xg"></div><p id="empty" class="muted">Your queue is empty. ZIP files need to be extracted first.</p><ul id="list" aria-label="Transfer queue"></ul><div class="actions"><button id="clear" disabled>Clear queue</button></div></section></div>
+<section class="card"><h2><span class="number">3</span> Send to calculator</h2><label for="destination">Save variables in</label><select id="destination"><option value="original">Use each file’s original setting</option><option value="archive">Archive</option><option value="ram">RAM</option></select><label class="consent"><input id="consent" type="checkbox"><span>I understand that sending a variable with the same name and type may replace the calculator’s existing copy.</span></label><div class="actions"><button id="send" class="primary" disabled>Send files</button></div><progress id="progress" value="0" max="1" aria-label="Files transferred"></progress></section>
+<p id="status" class="notice" role="status" aria-live="polite">Checking browser support…</p>
+<details><summary>Connection help &amp; supported files</summary><ul><li>Use desktop Chrome or Edge. Firefox and Safari do not provide native WebUSB support.</li><li>If USB is unavailable from a downloaded file, try the <a href="https://silo555.github.io/ce-link/">HTTPS version</a>. A managed computer can still block USB; this tool cannot change school restrictions.</li><li>Windows may require a WinUSB driver already associated with the calculator. HTML alone cannot install a driver. Ask school IT if the calculator cannot be opened.</li><li>A charging-only cable will not work. If the picker is empty, try another data cable or port.</li><li>Supports programs and AppVars, including groups containing only those types, with ASCII letter/digit names. It does not install Flash apps or operating systems, convert text/Python/ZIP files, or make incompatible programs run on your OS.</li><li>If a transfer stops, check the calculator for partial results before retrying. Already sent files remain on the calculator.</li></ul></details>
+<footer>Experimental · Protocol based on <a href="https://github.com/Timendus/ticalc-usb">ticalc-usb</a> · <a href="https://github.com/silo555/ce-link">Source &amp; instructions</a> · GPL-3.0-or-later<br>Independent project, unaffiliated with Texas Instruments. Physical calculator transfer has not yet been verified for this build.</footer>
+<noscript><p class="notice error">Enable JavaScript to use this tool.</p></noscript>
+</main><script>/* CE Link — GPL-3.0-or-later. Includes ticalc-usb; see THIRD_PARTY.md. */
+(()=>{const modules={"src/app.js":(module,exports,require)=>{
+const Calculator = require("vendor/ticalc-usb/dusb/ez80series.js");
+const { parseFile } = require("src/files.js");
+const $ = id => document.getElementById(id);
+let device = null, calculator = null, busy = false, loading = false, queue = [];
+const supported = !!navigator.usb && window.isSecureContext;
+function message(text, error = false) {
+  $('status').textContent = text;
+  $('status').className = error ? 'notice error' : 'notice';
+}
+function render() {
+  $('connect').disabled = busy || !supported || !!calculator;
+  $('disconnect').disabled = busy || !device;
+  $('files').disabled = busy || loading;
+  $('clear').disabled = busy || loading || !queue.length;
+  $('send').disabled = busy || loading || !calculator || !queue.some(item => item.state === 'Ready');
+  $('consent').disabled = busy;
+  $('destination').disabled = busy;
+  $('connection').textContent = calculator ? 'Connected · ' + device.productName : 'Not connected';
+  $('list').replaceChildren();
+  for (const item of queue) {
+    const row = document.createElement('li');
+    const info = document.createElement('span');
+    const title = document.createElement('strong');
+    title.textContent = item.name;
+    const detail = document.createElement('small');
+    detail.textContent = item.error || item.parsed.entries.map(e => `${e.name} · ${e.type === 21 ? 'AppVar' : 'Program'} · ${e.size.toLocaleString()} bytes`).join(' / ');
+    info.append(title, detail);
+    const state = document.createElement('span'); state.className = 'tag'; state.textContent = item.state;
+    row.append(info, state); $('list').append(row);
+  }
+  $('empty').hidden = queue.length > 0;
+}
+async function closeDevice() {
+  const old = device; device = null; calculator = null;
+  if (old && old.opened) { try { await old.close(); } catch {} }
+}
+async function timed(operation, milliseconds = 20000) {
+  let timer;
+  try {
+    return await Promise.race([operation(), new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error('USB timed out. Disconnect and reconnect the cable before retrying.')), milliseconds);
+    })]);
+  } finally { clearTimeout(timer); }
+}
+function explain(error) {
+  if (error.name === 'NotFoundError') return 'No calculator selected. Connect your cable and try again.';
+  if (['SecurityError', 'NotAllowedError'].includes(error.name)) return 'USB permission was denied or blocked by browser/school policy.';
+  if (error.name === 'NetworkError') return 'Cannot open the calculator. Close TI Connect and other calculator tabs. Windows may need an existing WinUSB driver.';
+  return error.message || String(error);
+}
+$('connect').onclick = async () => {
+  busy = true; render(); message('Choose your TI-84 Plus CE in the USB picker…');
+  try {
+    device = await navigator.usb.requestDevice({ filters: [{ vendorId: 0x0451, productId: 0xe008 }] });
+    if (!/^TI-84 Plus CE(?:\b|[- ])/.test(device.productName || ''))
+      throw new Error('Select a TI-84 Plus CE family calculator. Other models are not supported by this tool.');
+    await timed(async () => {
+      const candidate = new Calculator({ device, properties: {} });
+      await candidate.connect();
+      if (!await candidate.isReady()) throw new Error('Calculator did not respond. Turn it on and return to the home screen.');
+      calculator = candidate;
+    });
+    message('Connected. Choose your files, then send when ready.');
+  } catch (error) { await closeDevice(); message(explain(error), true); }
+  finally { busy = false; render(); }
+};
+$('disconnect').onclick = async () => { busy = true; render(); await closeDevice(); busy = false; message('Disconnected.'); render(); };
+navigator.usb?.addEventListener('disconnect', event => {
+  if (event.device === device) {
+    device = null; calculator = null;
+    message('Calculator unplugged. Reconnect before sending more files.', true); render();
+  }
+});
+async function addFiles(files) {
+  if (busy || loading) return;
+  loading = true; render();
+  try {
+    for (const file of files) {
+      if (queue.length >= 100) { message('Queue limit: 100 files. Clear the queue to add more.', true); break; }
+      const item = { name: file.name, state: 'Ready' };
+      try {
+        if (!/\.8x[pvg]$/i.test(file.name)) throw new Error('Choose .8xp programs, .8xv AppVars, or .8xg groups. Extract ZIP files first.');
+        if (file.size > 65592) throw new Error('File is too large for a standard TI variable container.');
+        item.parsed = parseFile(await file.arrayBuffer());
+      } catch (error) { item.error = explain(error); item.state = 'Invalid'; }
+      queue.push(item);
+    }
+  } finally { loading = false; $('files').value = ''; render(); }
+}
+$('files').onchange = event => addFiles(event.target.files);
+$('drop').ondragover = event => { event.preventDefault(); };
+$('drop').ondrop = event => { event.preventDefault(); addFiles(event.dataTransfer.files); };
+$('clear').onclick = () => { queue = []; $('consent').checked = false; $('progress').value = 0; render(); };
+$('send').onclick = async () => {
+  if (!$('consent').checked) { message('Check the box acknowledging that matching calculator variables can be replaced.', true); return; }
+  busy = true; render();
+  const pending = queue.filter(item => item.state === 'Ready');
+  $('progress').max = pending.length; $('progress').value = 0;
+  let current;
+  try {
+    for (const item of pending) {
+      current = item; item.state = 'Sending'; render(); message('Sending ' + item.name + '… Keep the cable connected.');
+      const parsed = { ...item.parsed, entries: item.parsed.entries.map(entry => ({ ...entry,
+        attributes: { ...entry.attributes, archived: $('destination').value === 'original' ? entry.attributes.archived : $('destination').value === 'archive' }
+      })) };
+      await timed(async () => {
+        const storage = await calculator.getStorageDetails(parsed);
+        if (!storage.fits) throw new Error('Not enough calculator memory for ' + item.name + '.');
+        await calculator.sendFile(parsed);
+        // Confirm the calculator responds after the end-of-transmission packet.
+        if (!await calculator.isReady()) throw new Error('Transfer acknowledgement could not be confirmed. Check the calculator before retrying.');
+      }, 60000);
+      item.state = 'Sent'; $('progress').value++;
+    }
+    message('Transfer complete. ' + pending.length + ' file(s) sent.');
+  } catch (error) {
+    if (current) current.state = 'Check calculator';
+    await closeDevice(); message(explain(error) + ' Stopped; later files were not sent. Check for a partial transfer before reconnecting.', true);
+  } finally { busy = false; render(); }
+};
+message(supported ? 'Ready in this browser. Connect a powered-on calculator with a USB data cable.' :
+  'USB is unavailable here. Open this HTML in desktop Chrome or Edge. If local-file USB is blocked, use the HTTPS version; school policy may still prevent access.', !supported);
+render();
+
+},
+"vendor/ticalc-usb/dusb/ez80series.js":(module,exports,require)=>{
+const Ti84series = require("vendor/ticalc-usb/dusb/ti84series.js");
+
+module.exports = class EZ80series extends Ti84series {
+
+  // EZ80 calculators report 0 free RAM when on the homescreen, because all of
+  // RAM is then being used as a buffer. We can still send files safely, we just
+  // don't really know how much RAM is free. And the transfer may fail because
+  // of that. So it really just is `undefined` if we get a value of zero.
+  // Discussion here: https://github.com/Timendus/ticalc.link/issues/5
+  async getFreeMem() {
+    const freeMem = await super.getFreeMem();
+    if ( freeMem.ram == 0 ) freeMem.ram = undefined;
+    return freeMem;
+  }
+
+}
+
+},
+"vendor/ticalc-usb/dusb/ti84series.js":(module,exports,require)=>{
+const Device = require("vendor/ticalc-usb/dusb/device.js");
+const v = require("vendor/ticalc-usb/dusb/magic-values.js");
+const b = require("vendor/ticalc-usb/byte-mangling.js");
+
+module.exports = class Ti84series {
+
+  constructor({device, properties}) {
+    this._d = new Device(device);
+    Object.assign(this, properties);
+  }
+
+  async connect() {
+    await this._d.connect();
+    return this;
+  }
+
+  // Is the file type supported by our device?
+  canReceive(file) {
+    return this.compatibleFiles.includes(file.calcType);
+  }
+
+  // Does the device have enough storage space?
+  async getStorageDetails(file) {
+    const free = await this.getFreeMem();
+
+    const required = {
+      ram:   file.entries.filter(e => !e.attributes.archived)
+                         .reduce((a, e) => a + e.size, 0),
+      flash: file.entries.filter(e => e.attributes.archived)
+                         .reduce((a, e) => a + e.size, 0)
+    };
+
+    return {
+      free, required,
+      fits: free.flash >= required.flash &&
+            ( free.ram === undefined || free.ram >= required.ram )
+    };
+  }
+
+  // Check if the calculator is connected and listening
+  async isReady() {
+    try {
+      await this._d.send({
+        type: v.virtualPacketTypes.DUSB_VPKT_PING,
+        data: v.modes.DUSB_MODE_NORMAL
+      });
+      await this._d.expect(v.virtualPacketTypes.DUSB_VPKT_MODE_SET);
+      return true;
+    } catch(e) {
+      console.debug(e);
+      return false;
+    }
+  }
+
+  // Remotely press a key on the calculator
+  // For key values, see https://github.com/debrouxl/tilibs/blob/master/libticalcs/trunk/src/keys83p.h
+  async pressKey(key) {
+    await this._d.send({
+      type: v.virtualPacketTypes.DUSB_VPKT_EXECUTE,
+      data: [0, 0, v.executeCommands.DUSB_EID_KEY, 0, key]
+    });
+    await this._d.expect(v.virtualPacketTypes.DUSB_VPKT_DATA_ACK);
+  }
+
+  // Request the amount of free RAM and Flash memory
+  async getFreeMem() {
+    await this._d.send({
+      type: v.virtualPacketTypes.DUSB_VPKT_PARM_REQ,
+      data: [
+        0, 2,
+        b.intToBytes(v.parameters.DUSB_PID_FREE_RAM, 2),
+        b.intToBytes(v.parameters.DUSB_PID_FREE_FLASH, 2)
+      ].flat()
+    });
+
+    const paramsResponse = await this._d.expect(v.virtualPacketTypes.DUSB_VPKT_PARM_DATA);
+    const params = b.destructParameters(paramsResponse.data);
+    if ( !params.every(p => p.ok) )
+      throw 'Could not succesfully get all parameters';
+
+    return {
+      ram: params.find(p => p.type == v.parameters.DUSB_PID_FREE_RAM).value,
+      flash: params.find(p => p.type == v.parameters.DUSB_PID_FREE_FLASH).value,
+    };
+  }
+
+  // Send a TI file to the calculator
+  async sendFile(file) {
+    for ( let i = 0; i < file.entries.length; i++ ) {
+      await this._sendEntry(file.entries[i]);
+    }
+  }
+
+  async _sendEntry(entry) {
+    await this._d.send({
+      type: v.virtualPacketTypes.DUSB_VPKT_RTS,
+      data: [
+        ...b.intToBytes(entry.name.length, 2),
+        ...b.asciiToBytes(entry.name, entry.name.length), 0,
+        ...b.intToBytes(entry.size, 4),
+        v.transferModes.SILENT,
+        ...this._entryParameters(entry)
+      ]
+    })
+    await this._d.expect(v.virtualPacketTypes.DUSB_VPKT_DATA_ACK);
+
+    await this._d.send({
+      type: v.virtualPacketTypes.DUSB_VPKT_VAR_CNTS,
+      data: entry.data
+    });
+    await this._d.expect(v.virtualPacketTypes.DUSB_VPKT_DATA_ACK);
+
+    await this._d.send({
+      type: v.virtualPacketTypes.DUSB_VPKT_EOT
+    });
+  }
+
+  _entryParameters(entry) {
+    return b.constructParameters([
+      {
+        type: v.attributes.DUSB_AID_VAR_TYPE,
+        size: 4,
+        value: 0xF0070000 + entry.type
+      },
+      {
+        type: v.attributes.DUSB_AID_ARCHIVED,
+        size: 1,
+        value: entry.attributes && entry.attributes.archived ? 1 : 0
+      },
+      {
+        type: v.attributes.DUSB_AID_VAR_VERSION,
+        size: 4,
+        value: entry.attributes && entry.attributes.version || 0
+      }
+    ]);
+  }
+
+}
+
+},
+"vendor/ticalc-usb/dusb/device.js":(module,exports,require)=>{
+// Javascript implementation of a subset of the DUSB / CARS protocol
+// Inspired by tilibs (https://github.com/debrouxl/tilibs)
+
+const v = require("vendor/ticalc-usb/dusb/magic-values.js");
+const b = require("vendor/ticalc-usb/byte-mangling.js");
+
+module.exports = class Device {
+
+  constructor(device) {
+    this._device = device;
+  }
+
+  /* Public API */
+
+  // Connect to the USB device and ask what our maximum buffer size is
+  async connect() {
+    // Open device and select the primary configuration
+    await this._device.open();
+    if (!this._device.configuration) await this._device.selectConfiguration(1);
+
+    // Claim the interface and its two endpoints
+    const iface = this._device.configuration.interfaces.find(i =>
+      i.alternates.some(a => a.endpoints.some(e => e.type === 'bulk' && e.direction === 'in') &&
+        a.endpoints.some(e => e.type === 'bulk' && e.direction === 'out')));
+    if (!iface) throw new Error('No compatible bulk USB interface found.');
+    await this._device.claimInterface(iface.interfaceNumber);
+    const alternate = iface.alternates.find(a => a.endpoints.some(e => e.type === 'bulk' && e.direction === 'in') &&
+      a.endpoints.some(e => e.type === 'bulk' && e.direction === 'out'));
+    if (iface.alternate.alternateSetting !== alternate.alternateSetting)
+      await this._device.selectAlternateInterface(iface.interfaceNumber, alternate.alternateSetting);
+    this._inEndpoint = alternate.endpoints.find(e => e.type === 'bulk' && e.direction === 'in');
+    this._outEndpoint = alternate.endpoints.find(e => e.type === 'bulk' && e.direction === 'out');
+
+    // Ask the device for the max buffer size
+    this._bufferSize = await this._requestBufferSize();
+    if (this._bufferSize < 16 || this._bufferSize > 1048576) throw new Error('Invalid USB buffer size.');
+  }
+
+  // Send a virtual packet to the device
+  async send(packet) {
+    const virtualPacket = b.constructVirtualPacket(packet);
+    // Cut data in chunks to be sent
+    const chunks = b.chunkArray(
+      virtualPacket || [],
+      [
+        this._bufferSize - v.rawPacketTypes.HEADER_SIZE
+      ]
+    );
+
+    // Send the chunks
+    for ( let i = 0; i < chunks.length; i++ ) {
+      // Give the last packet a type DUSB_RPKT_VIRT_DATA_LAST
+      const type = i == chunks.length - 1 ?
+        v.rawPacketTypes.DUSB_RPKT_VIRT_DATA_LAST:
+        v.rawPacketTypes.DUSB_RPKT_VIRT_DATA ;
+
+      const data = chunks[i];
+
+      await this._send(b.constructRawPacket({ type, data }));
+      await this._expectAck();
+    }
+  }
+
+  // Expect a virtual packet of a certain type, returns the packet if the type
+  // matches. Throws an error otherwise. Note that this function does not
+  // support a fragmented data transfer, and as such can't be used to receive a
+  // program from the calculator.
+  async expect(virtualType) {
+    const raw = b.destructRawPacket(await this._receive());
+
+    if ( raw.type != v.rawPacketTypes.DUSB_RPKT_VIRT_DATA_LAST )
+      throw `Expected raw packet type VIRT_DATA_LAST, but got ${raw.type} instead`;
+
+    const virtual = b.destructVirtualPacket(raw.data);
+
+    switch(virtual.type) {
+
+      // Did we get what we expected?
+      case virtualType:
+        await this._sendAck();
+        return virtual;
+
+      // If not, did we get a delay request?
+      case v.virtualPacketTypes.DUSB_VPKT_DELAY_ACK:
+        await this._sendAck();
+        const delay = b.bytesToInt(virtual.data);
+        await this.wait(delay / 1000);
+        return this.expect(virtualType);
+
+      // Otherwise, we have a problem here
+      default:
+        throw `Expected virtual packet type ${virtualType}, but got ${virtual.type} instead`;
+
+    }
+  }
+
+  // Halt execution for the given amount of milliseconds
+  wait(ms) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve(), ms);
+    });
+  }
+
+  /* Private API */
+
+  async _requestBufferSize() {
+    await this._send(b.constructRawPacket({
+      type: v.rawPacketTypes.DUSB_RPKT_BUF_SIZE_REQ,
+      data: [ 0, 0, 4, 0 ]
+    }));
+
+    const response = b.destructRawPacket(await this._receive());
+    if ( response.type != v.rawPacketTypes.DUSB_RPKT_BUF_SIZE_ALLOC )
+      throw `Expected BUF_SIZE_ALLOC, got ${response.type} instead`;
+    return b.bytesToInt(response.data);
+  }
+
+  async _send(buffer) {
+    const result = await this._device.transferOut(this._outEndpoint.endpointNumber, buffer);
+    if (result.status !== 'ok' || result.bytesWritten !== buffer.byteLength)
+      throw new Error('USB write failed or was incomplete. Reconnect before retrying.');
+  }
+
+  async _receive() {
+    const packet = await this._device.transferIn(this._inEndpoint.endpointNumber, this._inEndpoint.packetSize);
+    if ( packet.status != 'ok' ) throw `Error in receiving data from device: ${packet.status}`;
+    return new Uint8Array(packet.data.buffer, packet.data.byteOffset, packet.data.byteLength);
+  }
+
+  // Send a raw ack packet
+  _sendAck() {
+    return this._send(b.constructRawPacket({
+      type: v.rawPacketTypes.DUSB_RPKT_VIRT_DATA_ACK,
+      data: [ 0xE0, 0 ]
+    }));
+  }
+
+  // Expect a raw ack packet
+  async _expectAck() {
+    const response = b.destructRawPacket(await this._receive());
+
+    if ( response.type != v.rawPacketTypes.DUSB_RPKT_VIRT_DATA_ACK )
+      throw `Expected ACK, got ${response.type} instead`;
+  }
+
+}
+
+},
+"vendor/ticalc-usb/dusb/magic-values.js":(module,exports,require)=>{
+// Javascript implementation of a subset of the DUSB / CARS protocol
+// Values taken from tilibs (https://github.com/debrouxl/tilibs)
+
+module.exports = {
+
+  // Raw packet types
+  // https://github.com/debrouxl/tilibs/blob/master/libticalcs/trunk/src/dusb_rpkt.h
+
+  rawPacketTypes: {
+    DUSB_RPKT_BUF_SIZE_REQ:    1,
+    DUSB_RPKT_BUF_SIZE_ALLOC:  2,
+
+    DUSB_RPKT_VIRT_DATA:       3,
+    DUSB_RPKT_VIRT_DATA_LAST:  4,
+    DUSB_RPKT_VIRT_DATA_ACK:   5,
+
+    HEADER_SIZE:               4 + 1
+  },
+
+  // Virtual packet types
+  // https://github.com/debrouxl/tilibs/blob/master/libticalcs/trunk/src/dusb_vpkt.h
+
+  virtualPacketTypes: {
+    DUSB_VPKT_PING:            0x0001,
+    DUSB_VPKT_OS_BEGIN:        0x0002,
+    DUSB_VPKT_OS_ACK:          0x0003,
+    DUSB_VPKT_OS_HEADER:       0x0004,
+    DUSB_VPKT_OS_DATA:         0x0005,
+    DUSB_VPKT_EOT_ACK:         0x0006,
+    DUSB_VPKT_PARM_REQ:        0x0007,
+    DUSB_VPKT_PARM_DATA:       0x0008,
+    DUSB_VPKT_DIR_REQ:         0x0009,
+    DUSB_VPKT_VAR_HDR:         0x000A,
+    DUSB_VPKT_RTS:             0x000B,
+    DUSB_VPKT_VAR_REQ:         0x000C,
+    DUSB_VPKT_VAR_CNTS:        0x000D,
+    DUSB_VPKT_PARM_SET:        0x000E,
+    DUSB_VPKT_MODIF_VAR:       0x0010,
+    DUSB_VPKT_EXECUTE:         0x0011,
+    DUSB_VPKT_MODE_SET:        0x0012,
+
+    DUSB_VPKT_DATA_ACK:        0xAA00,
+    DUSB_VPKT_DELAY_ACK:       0xBB00,
+    DUSB_VPKT_EOT:             0xDD00,
+    DUSB_VPKT_ERROR:           0xEE00,
+
+    HEADER_SIZE:               4 + 2
+  },
+
+  // Modes
+  // https://github.com/debrouxl/tilibs/blob/master/libticalcs/trunk/src/dusb_cmd.h
+
+  modes: {
+    DUSB_MODE_STARTUP:         [ 0,1, 0,1, 0,0, 0,0, 0x07,0xd0 ],
+    DUSB_MODE_BASIC:           [ 0,2, 0,1, 0,0, 0,0, 0x07,0xd0 ],
+    DUSB_MODE_NORMAL:          [ 0,3, 0,1, 0,0, 0,0, 0x07,0xd0 ]
+  },
+
+  // Execute commands
+  // https://github.com/debrouxl/tilibs/blob/master/libticalcs/trunk/src/dusb_cmd.h
+
+  executeCommands: {
+    DUSB_EID_PRGM:              0x00,
+    DUSB_EID_ASM:               0x01,
+    DUSB_EID_APP:               0x02,
+    DUSB_EID_KEY:               0x03,
+    DUSB_EID_UNKNOWN:           0x04
+  },
+
+  // Parameter IDs
+  // https://github.com/debrouxl/tilibs/blob/master/libticalcs/trunk/src/dusb_cmd.h
+
+  parameters: {
+    DUSB_PID_PRODUCT_NUMBER:    0x0001,
+    DUSB_PID_PRODUCT_NAME:      0x0002,
+    DUSB_PID_MAIN_PART_ID:      0x0003,
+    DUSB_PID_HW_VERSION:        0x0004,
+    DUSB_PID_FREE_RAM:          0x000E,
+    DUSB_PID_FREE_FLASH:        0x0011,
+    DUSB_PID_COLOR_AVAILABLE:   0x001B,
+    DUSB_PID_BITS_PER_PIXEL:    0x001D,
+    DUSB_PID_LCD_WIDTH:         0x001E,
+    DUSB_PID_LCD_HEIGHT:        0x001F,
+    DUSB_PID_MATH_CAPABILITIES: 0x004B,
+    DUSB_PID_PYTHON_ON_BOARD:   0x005D
+  },
+
+  // Attributes IDs
+  // https://github.com/debrouxl/tilibs/blob/master/libticalcs/trunk/src/dusb_cmd.h
+
+  attributes: {
+    DUSB_AID_VAR_TYPE:          0x02,
+    DUSB_AID_ARCHIVED:          0x03,
+    DUSB_AID_VAR_VERSION:       0x08,
+  },
+
+  // Transfer modes
+  // Inferred from https://github.com/debrouxl/tilibs/blob/master/libticalcs/trunk/src/dusb_cmd.cc
+
+  transferModes: {
+    SILENT:                     0x01,
+    NON_SILENT:                 0x02
+  }
+
+};
+
+},
+"vendor/ticalc-usb/byte-mangling.js":(module,exports,require)=>{
+module.exports = {
+  constructRawPacket,
+  destructRawPacket,
+
+  constructVirtualPacket,
+  destructVirtualPacket,
+
+  constructParameters,
+  destructParameters,
+
+  intToBytes,
+  bytesToInt,
+  asciiToBytes,
+  bytesToAscii,
+
+  chunkArray
+}
+
+function constructRawPacket(packet) {
+  return constructPacket(packet, 1);
+}
+
+function constructVirtualPacket(packet) {
+  return constructPacket(packet, 2);
+}
+
+// Takes an object of the form { type, data } and constructs a sequence of
+// unsigned 8-bit values from it.
+function constructPacket(packet, typeSize) {
+  // The first 4 bytes are the packet size
+  const size = packet.data && packet.data.length || 0;
+  const header = intToBytes(size, 4);
+
+  // The next part is the packet type
+  header.splice(4, 0, ...intToBytes(packet.type, typeSize));
+
+  // The rest is the actual data
+  const result = new Uint8Array(header.length + size);
+  result.set(header);
+  result.set(packet.data || [], header.length);
+  return result;
+}
+
+// Takes a sequence of unsigned 8-bit values and constructs an object of the
+// form { size, type, data } from it.
+function destructRawPacket(packet) {
+  return {
+    size: bytesToInt(packet.slice(0,4)),
+    type: packet[4],
+    data: packet.slice(5)
+  };
+}
+
+// Takes a sequence of unsigned 8-bit values and constructs an object of the
+// form { size, type, data } from it.
+function destructVirtualPacket(packet) {
+  return {
+    size: bytesToInt(packet.slice(0,4)),
+    type: bytesToInt(packet.slice(4,6)),
+    data: packet.slice(6)
+  };
+}
+
+// Takes a list of parameters and constructs a sequence of unsigned 8-bit values
+// from it.
+function constructParameters(params) {
+  /**
+   * Structure:
+   * index  size  description
+   *  0-1    2    number of parameters N
+   *  2-3    2    type of the parameter
+   *  5-6    2    size of the parameter X
+   *  7-X    X    parameter value
+   *  X-          repeat pattern N times
+   */
+
+  return new Uint8Array([
+    intToBytes(params.length, 2),
+    ...params.map(param => [
+      intToBytes(param.type, 2),
+      intToBytes(param.size, 2),
+      intToBytes(param.value, param.size)
+    ].flat())
+  ].flat());
+}
+
+// Takes a sequence of unsigned 8-bit values (a parameter request response) and
+// finds the parameters in it.
+function destructParameters(params) {
+  /**
+   * Structure:
+   * index  size  description
+   *  0-1    2    number of parameters N
+   *  2-3    2    type of the parameter
+   *   4     1    parameter ok or not. 0 means ok.
+   *  5-6    2    size of the parameter X
+   *  7-X    X    parameter value
+   *  X-          repeat pattern N times
+   */
+  const result = [];
+  const count = bytesToInt(params.slice(0,2));
+  let j = 2;
+  for ( let i = 0; i < count; i++ ) {
+    const size = bytesToInt(params.slice(j+3,j+5));
+    result.push({
+      type: bytesToInt(params.slice(j,j+2)),
+      ok: params[j+2] == 0,
+      size,
+      value: bytesToInt(params.slice(j+5, j+5+size))
+    });
+    j += 5 + size;
+  }
+  return result;
+}
+
+// Takes a number and spreads it out over length bytes (MSB first)
+function intToBytes(num, length) {
+  if ( num > Number.MAX_SAFE_INTEGER ) throw 'Number too big to reliably convert';
+
+  const bytes = [];
+  while ( length > 0 ) {
+    length--;
+    bytes.push((num / Math.pow(256, length)) & 0xFF);
+  }
+  return bytes;
+}
+
+// Takes an array of bytes and reduces it to one number (MSB first)
+function bytesToInt(bytes) {
+  // Result more than Number.MAX_SAFE_INTEGER?
+  if ( !_bytesSafeInteger(bytes) ) throw 'Number too big to reliably convert';
+
+  let length = bytes.length;
+  let result = 0;
+  let i = 0;
+  while ( length > 0 ) {
+    length--;
+    result += (bytes[i++] & 0xFF) * Math.pow(256, length);
+  }
+  return result;
+}
+
+function _bytesSafeInteger(bytes) {
+  // Strip off leading zeros
+  // (there must be a more elegant solution, but I can't come up with one right now 😂)
+  let seenValue = false;
+  bytes = bytes.filter(b => {
+    if ( b == 0 && !seenValue ) return false;
+    seenValue = true;
+    return true;
+  });
+
+  // Is what's left less than Number.MAX_SAFE_INTEGER?
+  if ( bytes.length < 7 ) return true;
+  if ( bytes.length == 7 ) return bytes[0] <= 0x1F;
+  return false;
+}
+
+function asciiToBytes(string, length) {
+  length = length || string.length + 1;
+  const TE = typeof TextEncoder !== 'undefined' ? TextEncoder : ({TextEncoder,TextDecoder}).TextEncoder;
+  const bytes = new TE("utf-8").encode(string);
+  const result = new Uint8Array(length);
+  result.set(bytes.slice(0,length));
+  return result;
+}
+
+function bytesToAscii(bytes) {
+  // A string can be zero-terminated. Make sure we respect that
+  const index = bytes.indexOf(0);
+  if ( index >= 0 ) {
+    bytes = bytes.slice(0, index);
+  }
+
+  // Interpret the rest as UTF-8 bytes
+  const TD = typeof TextDecoder !== 'undefined' ? TextDecoder : ({TextEncoder,TextDecoder}).TextDecoder;
+  return new TD("utf-8").decode(bytes);
+}
+
+// Split up an array in pieces, each of a size defined in sizes. If we run out
+// of sizes, but we have data left, we continue with the last given size. If we
+// run out of data, we stop.
+function chunkArray(array, sizes) {
+  const result = [];
+  let i, j = 0;
+  for ( i = 0; i < sizes.length; i++ ) {
+    result.push(array.slice(j, j + sizes[i]));
+    j += sizes[i];
+    if ( j >= array.length ) return result;
+  }
+  i--;
+  while ( j < array.length ) {
+    result.push(array.slice(j, j + sizes[i]));
+    j += sizes[i];
+  }
+  return result;
+}
+
+},
+"src/files.js":(module,exports,require)=>{
+// Strict TI-83F variable container reader. Only program and AppVar entries are sent.
+function parseFile(input) {
+  const bytes = new Uint8Array(input);
+  const word = i => bytes[i] | bytes[i + 1] << 8;
+  const fail = message => { throw new Error(message); };
+  if (bytes.length < 57 || String.fromCharCode(...bytes.slice(0, 8)) !== '**TI83F*' ||
+      bytes[8] !== 0x1a || bytes[9] !== 0x0a || bytes[10] !== 0)
+    fail('Not a supported TI variable file. Choose .8xp, .8xv, or .8xg.');
+  const end = 55 + word(53);
+  if (end + 2 !== bytes.length) fail('File length does not match its header.');
+  const checksum = bytes.slice(55, end).reduce((sum, n) => (sum + n) & 65535, 0);
+  if (checksum !== word(end)) fail('Checksum failed. Download a fresh copy of this file.');
+  const entries = [];
+  for (let offset = 55; offset < end;) {
+    const header = word(offset), size = word(offset + 2);
+    if (![11, 13].includes(header) || offset + header + 4 > end)
+      fail('Invalid variable header.');
+    const dataStart = offset + header + 4;
+    if (!size || word(dataStart - 2) !== size || dataStart + size > end)
+      fail('Invalid or truncated variable data.');
+    const type = bytes[offset + 4];
+    if (![5, 6, 0x15].includes(type)) fail('Only programs and AppVars are supported, including inside groups.');
+    const nameBytes = bytes.slice(offset + 5, offset + 13);
+    const zero = nameBytes.indexOf(0);
+    const name = String.fromCharCode(...nameBytes.slice(0, zero < 0 ? 8 : zero));
+    if (!/^[A-Za-z][A-Za-z0-9]{0,7}$/.test(name) || (zero >= 0 && nameBytes.slice(zero).some(n => n !== 0)))
+      fail('This version supports only variable names with ASCII letters and digits.');
+    entries.push({ name, type, size, attributes: {
+      version: header === 13 ? bytes[offset + 13] : 0,
+      archived: header === 13 && !!(bytes[offset + 14] & 0x80)
+    }, data: bytes.slice(dataStart, dataStart + size) });
+    offset = dataStart + size;
+  }
+  if (!entries.length) fail('The file contains no variables.');
+  return { calcType: 'TI-84 Plus', entries };
+}
+module.exports = { parseFile };
+
+}};const cache={};function require(id){if(!cache[id]){const m=cache[id]={exports:{}};modules[id](m,m.exports,require)}return cache[id].exports}require("src/app.js");})();</script></body></html>
