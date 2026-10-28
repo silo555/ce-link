@@ -16,6 +16,7 @@ function render() {
   $('consent').disabled = busy;
   $('destination').disabled = busy;
   $('connection').textContent = calculator ? 'Connected · ' + device.productName : 'Not connected';
+  $('queue-count').textContent = queue.length + (queue.length === 1 ? ' file' : ' files');
   $('list').replaceChildren();
   for (const item of queue) {
     const row = document.createElement('li');

@@ -78,3 +78,7 @@ Protocol source: [ticalc-usb](https://github.com/Timendus/ticalc-usb), pinned to
 ## License
 
 [GPL-3.0-or-later](LICENSE). No warranty. Independent project; not affiliated with Texas Instruments.
+
+## Hosting
+
+CE Link is already hosted free at https://silo555.github.io/ce-link/ using GitHub Pages. It needs no backend or paid hosting. A custom domain is optional. See [HOSTING.md](HOSTING.md) for dated domain-price comparisons and free-hosting details.
